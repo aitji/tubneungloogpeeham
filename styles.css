@@ -160,7 +160,6 @@ tr:last-child td:last-child {
 }
 
 .payment-table table thead tr th {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, #0c4a7a 100%);
   color: white;
 }
 
