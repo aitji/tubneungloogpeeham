@@ -1,12 +1,28 @@
 import { google } from 'googleapis'
 
+let cache = {
+    data: null,
+    timestamp: 0
+}
+
+const CACHE_DURATION = 60 * 1000
+
 export default async function handler(req, res) {
-    // temporary CORS | (NOTE): adjust needed on production
-    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Origin', 'https://tubneungloogpeeham.vercel.app')
     res.setHeader('Access-Control-Allow-Methods', 'GET')
     if (req.method !== 'GET') return res.status(405).json({ error: '(!) method not allowed' })
 
     try {
+        const now = Date.now()
+
+        if (cache.data && (now - cache.timestamp) < CACHE_DURATION) {
+            return res.status(200).json({
+                ...cache.data,
+                cached: true,
+                cacheAge: Math.floor((now - cache.timestamp) / 1000)
+            })
+        }
+
         const auth = new google.auth.GoogleAuth({
             credentials: {
                 client_email: process.env.GOOGLE_SERVICE_CLIENT_EMAIL,
@@ -65,11 +81,19 @@ export default async function handler(req, res) {
             students.push(student)
         }
 
-        res.status(200).json({
+        const freshData = {
             maxAmount,
             students,
-            lastUpdated: new Date().toISOString()
-        })
+            lastUpdated: new Date().toISOString(),
+            cached: false
+        }
+
+        cache = {
+            data: freshData,
+            timestamp: now
+        }
+
+        res.status(200).json(freshData)
     } catch (error) {
         console.error('(!) fetching sheet data;', error)
         res.status(500).json({
