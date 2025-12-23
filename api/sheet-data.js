@@ -62,30 +62,20 @@ export default async function handler(req, res) {
             }
 
             for (let j = 5; j < Math.min(row.length, headers.length); j++) {
-                let status = row[j] || 'ยังไม่จ่าย'
-                let weekAmount = parseFloat(headers[j]?.replace(/[^\d.-]/g, '') || 0)
+                const status = row[j] || 'ยังไม่จ่าย'
+                const weekAmount = parseFloat(headers[j]?.replace(/[^\d.-]/g, '') || 0)
+                const weekLabel = headers[j] || ''
 
-                let rawLabel = headers[j] || ''
-
-                let contextLabel = ''
-                if (i === 3) contextLabel = ''
-                else {
-                    const headerRow = rows[1]
-                    if (headerRow[j] && headerRow[j].trim() !== '') contextLabel = headerRow[j].trim()
+                if (weekAmount !== 0 && weekLabel !== '') {
+                    student.payments.push({
+                        week: j - 4,
+                        label: weekLabel,
+                        amount: weekAmount,
+                        status: status,
+                        paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย',
+                        used: status === 'ใช้แล้ว'
+                    })
                 }
-
-                let weekLabel = rawLabel
-                if (status === 'ใช้แล้ว' || weekAmount < 0 || /\*/.test(rawLabel)) weekLabel = contextLabel || rawLabel
-
-                student.payments.push({
-                    week: j - 4,
-                    label: weekLabel,
-                    month: rows[0][j] || '',
-                    amount: weekAmount,
-                    status: status,
-                    paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย',
-                    used: status === 'ใช้แล้ว'
-                })
             }
 
             students.push(student)
