@@ -139,11 +139,11 @@ th {
 }
 
 th:first-child {
-  border-top-left-radius: 6px;
+  border-top-left-radius: 3px;
 }
 
 th:last-child {
-  border-top-right-radius: 6px;
+  border-top-right-radius: 3px;
 }
 
 td {
@@ -181,19 +181,6 @@ tr:last-child td:last-child {
 
 .payment-table table tbody tr:nth-child(even) td {
   background-color: var(--card-bg);
-}
-
-.payment-table table tbody tr td:nth-child(3) {
-  color: var(--success);
-  font-weight: 600;
-}
-.payment-table table tbody tr td:nth-child(4) {
-  color: var(--danger);
-  font-weight: 600;
-}
-.payment-table table tbody tr td:nth-child(6) {
-  color: var(--danger);
-  font-weight: 600;
 }
 
 .status-badge {
