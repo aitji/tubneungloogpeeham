@@ -118,7 +118,7 @@ function renderSummaryTable(students) {
           <tr>
             <td>${s.id}</td>
             <td>${s.prefix}${s.firstName} ${s.lastName}</td>
-            <td class="${s.totalPaid > 0 ? 'negative' : 'positive'}">฿${s.totalPaid}</td>
+            <td class="${s.totalPaid < 0 ? 'negative' : 'positive'}">฿${s.totalPaid}</td>
             <td class="${totalOwed > 0 ? 'negative' : 'positive'}">฿${totalOwed}</td>
             <td class="${unpaidWeeks > 0 ? 'negative' : 'positive'}">${unpaidWeeks} สัปดาห์</td>
             <td class="${unpaidAmount > 0 ? 'negative' : 'positive'}">฿${unpaidAmount}</td>
