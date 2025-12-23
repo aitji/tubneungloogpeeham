@@ -64,7 +64,7 @@ export default async function handler(req, res) {
             for (let j = 5; j < Math.min(row.length, headers.length); j++) {
                 const status = row[j] || 'ยังไม่จ่าย'
                 const weekAmount = parseFloat(headers[j]?.replace(/[^\d.-]/g, '') || 0)
-                const weekLabel = headers[j] || ''
+                const weekLabel = headers[j-1] || ''
 
                 if (weekAmount !== 0 && weekLabel !== '') {
                     student.payments.push({
