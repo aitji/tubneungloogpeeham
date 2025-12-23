@@ -3,7 +3,7 @@ let maxAmount = 0
 
 async function fetchData() {
     try {
-        const response = await fetch('/api/sheet-data')
+        const response = await fetch('https://tubneungloogpeeham.vercel.app/api/sheet-data')
         const data = await response.json()
         if (data.error) throw new Error(data.error)
 

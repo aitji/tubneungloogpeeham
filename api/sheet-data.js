@@ -32,7 +32,7 @@ export default async function handler(req, res) {
         })
 
         const sheets = google.sheets({ version: 'v4', auth })
-        const spreadsheetId = '118Uq9uj9esoR6iTpi6hmZ7L3QYFZRnWvb2tpUNgTP6g'
+        const spreadsheetId = '118Uq9uj9esoR6iTpi6hmZ7L3QYFZRnWvb2tpUNgTP6g' // <-- this sheet is publicly readable, no need to be concerned
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
         console.error('(!) fetching sheet data;', error)
         res.status(500).json({
             error: '(!) failed to fetch data',
-            details: error.message
+            // details: error.message | i don't feel like to expose error details in production
         })
     }
 }

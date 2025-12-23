@@ -1,14 +1,4 @@
-:root {
-  --primary-blue: #0a3662;
-  --dark-bg: #0d1117;
-  --card-bg: #161b22;
-  --border-color: #30363d;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --success: #28a745;
-  --warning: #ffc107;
-  --danger: #dc3545;
-}
+@import url("../root.css");
 
 * {
   margin: 0;

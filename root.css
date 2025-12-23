@@ -1,0 +1,31 @@
+:root {
+  --primary-blue: #0a3662;
+  --dark-bg: #0d1117;
+  --card-bg: #161b22;
+  --border-color: #30363d;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+}
+
+@font-face {
+  font-family: Prompt;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/prompt/v10/-W__XJnvUD7dzB2KdNodVkI.woff2)
+    format("woff2");
+  unicode-range: U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+
+@font-face {
+  font-family: Prompt;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/prompt/v10/-W_8XJnvUD7dzB2C2_8IfWMuQ5Q.woff2")
+    format("woff2");
+  unicode-range: U+0E01-0E5B, U+200C-200D, U+25CC;
+}
