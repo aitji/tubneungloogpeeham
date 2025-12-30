@@ -6,6 +6,16 @@ let cache = {
 }
 
 const CACHE_DURATION = 60 * 1000
+const auth = new google.auth.GoogleAuth({
+    credentials: {
+        client_email: process.env.GOOGLE_SERVICE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+})
+
+const sheets = google.sheets({ version: 'v4', auth })
+const spreadsheetId = '118Uq9uj9esoR6iTpi6hmZ7L3QYFZRnWvb2tpUNgTP6g' // <-- this sheet is publicly readable, no need to be concerned
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', 'https://tubneungloogpeeham.vercel.app')
@@ -22,17 +32,6 @@ export default async function handler(req, res) {
                 cacheAge: Math.floor((now - cache.timestamp) / 1000)
             })
         }
-
-        const auth = new google.auth.GoogleAuth({
-            credentials: {
-                client_email: process.env.GOOGLE_SERVICE_CLIENT_EMAIL,
-                private_key: process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n')
-            },
-            scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
-        })
-
-        const sheets = google.sheets({ version: 'v4', auth })
-        const spreadsheetId = '118Uq9uj9esoR6iTpi6hmZ7L3QYFZRnWvb2tpUNgTP6g' // <-- this sheet is publicly readable, no need to be concerned
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
