@@ -35,7 +35,7 @@ function renderStudent(student) {
     const totalOwed = maxAmount - student.totalPaid
     const unpaidWeeks = student.payments.filter(p => !p.paid && !p.used)
     const unpaidCount = unpaidWeeks.length
-    const unpaidAmount = unpaidWeeks.reduce((sum, p) => sum + p.amount, 0)
+    const unpaidAmount = unpaidWeeks.reduce((sum, p) => parseFloat(sum) + parseFloat(p?.amount || 0), 0)
 
     let paymentsTable = ''
     if (student.payments.length > 0) {
@@ -44,6 +44,7 @@ function renderStudent(student) {
             <table>
                 <thead>
                     <tr>
+                        <th>เดือนที่</th>
                         <th>สัปดาห์</th>
                         <th>รายละเอียด</th>
                         <th class="text-end">จำนวน</th>
@@ -53,7 +54,8 @@ function renderStudent(student) {
                 <tbody>
                     ${student.payments.map(payment => `
                         <tr>
-                            <td>สัปดาห์ ${payment.week}</td>
+                            <td>${payment.month}</td>
+                            <td>${payment.week}</td>
                             <td>${payment.label}</td>
 
                             <td class="text-end">${payment.amountRaw} บาท</td>
