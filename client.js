@@ -93,7 +93,7 @@ function renderStudent(student) {
     return `
     <div class="student-card">
         <div class="student-header">
-            <div class="student-name">${escapeHTML("" + student.prefix + student.firstName + " " + student.lastName)}}</div>
+            <div class="student-name">${escapeHTML("" + student.prefix + student.firstName + " " + student.lastName)}</div>
             <div class="student-number">เลขที่ ${escapeHTML(student.id)}</div>
         </div>
 
