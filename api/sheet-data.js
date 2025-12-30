@@ -48,9 +48,13 @@ export default async function handler(req, res) {
 
         const students = []
 
+        const headerMonths = rows[0]
+        const headerWeeks = rows[1]
+        const headerAmounts = rows[2]
+
         for (let i = 3; i < rows.length; i++) {
             const row = rows[i]
-            if (!row[0] || row[0] === '' || row[0] === 'รวมทั้งสิ้น') break
+            if (!row[0] || row[0] === 'รวมทั้งสิ้น') break
 
             const student = {
                 id: parseInt(row[0]) || 0,
@@ -61,21 +65,25 @@ export default async function handler(req, res) {
                 payments: []
             }
 
-            for (let j = 5; j < Math.min(row.length, headers.length); j++) {
-                const status = row[j] || 'ยังไม่จ่าย'
-                const weekAmount = parseFloat(headers[j]?.replace(/[^\d.-]/g, '') || 0)
-                const weekLabel = headers[j] || ''
+            let currentMonth = ''
+            for (let j = 5; j < row.length; j++) {
+                if (headerMonths[j]) currentMonth = headerMonths[j]
 
-                if (weekAmount !== 0 && weekLabel !== '') {
-                    student.payments.push({
-                        week: j - 4,
-                        label: weekLabel,
-                        amount: weekAmount,
-                        status: status,
-                        paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย',
-                        used: status === 'ใช้แล้ว'
-                    })
-                }
+                const status = row[j]
+                if (!status) continue
+
+                const week = headerWeeks[j] || ''
+                const amountRaw = headerAmounts[j] || ''
+
+                student.payments.push({
+                    month: currentMonth,
+                    week: week,
+                    label: week,
+                    amountRaw: amountRaw,
+                    amount: String(amountRaw),
+                    status,
+                    paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย'
+                })
             }
 
             students.push(student)

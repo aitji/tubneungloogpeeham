@@ -45,7 +45,7 @@ function renderStudent(student) {
                 <thead>
                     <tr>
                         <th>สัปดาห์</th>
-
+                        <th>รายละเอียด</th>
                         <th class="text-end">จำนวน</th>
                         <th>สถานะ</th>
                     </tr>
@@ -54,8 +54,9 @@ function renderStudent(student) {
                     ${student.payments.map(payment => `
                         <tr>
                             <td>สัปดาห์ ${payment.week}</td>
+                            <td>${payment.label}</td>
 
-                            <td class="text-end">${payment.amount} บาท</td>
+                            <td class="text-end">${payment.amountRaw} บาท</td>
                             <td>${getStatusBadge(payment.status)}</td>
                         </tr>
                     `).join('')}
