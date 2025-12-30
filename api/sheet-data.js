@@ -81,7 +81,7 @@ export default async function handler(req, res) {
                     amountRaw: amountRaw,
                     amount: String(amountRaw),
                     status,
-                    paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย'
+                    paid: status === 'จ่ายแล้ว' || status === 'โอนจ่าย' || status === 'ใช้ไปแล้ว'
                 })
             }
 

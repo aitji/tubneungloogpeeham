@@ -22,20 +22,43 @@ async function fetchData() {
     }
 }
 
+/**
+ * @param {"จ่ายแล้ว"|"โอนจ่าย"|"ใช้แล้ว"} status 
+ * @returns {String} html element
+ */
 function getStatusBadge(status) {
     switch (status) {
-        case "จ่ายแล้ว":  return '<span class="status-badge status-paid"><i class="fas fa-check-circle me-1"></i>จ่ายแล้ว</span>'
-        case "โอนจ่าย":  return '<span class="status-badge status-transfer"><i class="fas fa-exchange-alt me-1"></i>โอนจ่าย</span>'
-        case "ใช้แล้ว":   return '<span class="status-badge status-used"><i class="fas fa-minus-circle me-1"></i>ใช้แล้ว</span>'
-        default:        return '<span class="status-badge status-unpaid"><i class="fas fa-times-circle me-1"></i>ยังไม่จ่าย</span>'
+        case "จ่ายแล้ว": return '<span class="status-badge status-paid"><i class="fas fa-check-circle me-1"></i>จ่ายแล้ว</span>'
+        case "โอนจ่าย": return '<span class="status-badge status-transfer"><i class="fas fa-exchange-alt me-1"></i>โอนจ่าย</span>'
+        case "ใช้แล้ว": return '<span class="status-badge status-used"><i class="fas fa-minus-circle me-1"></i>ใช้แล้ว</span>'
+        default: return '<span class="status-badge status-unpaid"><i class="fas fa-times-circle me-1"></i>ยังไม่จ่าย</span>'
     }
 }
+
+/**
+ * force to return 0 if NaN
+ * @param {String|Number} num 
+ * @returns {Number}
+ */
+const zeroBreak = (num) => {
+    const int = Number(num)
+    if (Number.isNaN(int)) return 0
+    return int || 0
+}
+
+const escapeHTML = (() => {
+    const span = document.createElement('span')
+    return (text) => {
+        span.textContent = text
+        return span.innerHTML
+    }
+})()
 
 function renderStudent(student) {
     const totalOwed = maxAmount - student.totalPaid
     const unpaidWeeks = student.payments.filter(p => !p.paid && !p.used)
     const unpaidCount = unpaidWeeks.length
-    const unpaidAmount = unpaidWeeks.reduce((sum, p) => sum + Number(p.amount || 0), 0)
+    const unpaidAmount = unpaidWeeks.reduce((sum, p) => sum + zeroBreak(p.amount || 0), 0)
 
     let paymentsTable = ''
     if (student.payments.length > 0) {
@@ -54,11 +77,11 @@ function renderStudent(student) {
                 <tbody>
                     ${student.payments.map(payment => `
                         <tr>
-                            <td>${payment.month}</td>
-                            <td>${payment.week}</td>
-                            <td>${payment.label}</td>
+                            <td>${escapeHTML(payment.month)}</td>
+                            <td>${escapeHTML(payment.week)}</td>
+                            <td>${escapeHTML(payment.label)}</td>
 
-                            <td class="text-end">${payment.amountRaw} บาท</td>
+                            <td class="text-end">${escapeHTML(payment.amountRaw)} บาท</td>
                             <td>${getStatusBadge(payment.status)}</td>
                         </tr>
                     `).join('')}
@@ -70,26 +93,26 @@ function renderStudent(student) {
     return `
     <div class="student-card">
         <div class="student-header">
-            <div class="student-name">${student.prefix}${student.firstName} ${student.lastName}</div>
-            <div class="student-number">เลขที่ ${student.id}</div>
+            <div class="student-name">${escapeHTML("" + student.prefix + student.firstName + " " + student.lastName)}}</div>
+            <div class="student-number">เลขที่ ${escapeHTML(student.id)}</div>
         </div>
 
         <div class="payment-summary">
             <div class="summary-card">
                 <div class="summary-label">จ่ายแล้ว</div>
-                <div class="summary-value positive">฿${student.totalPaid}</div>
+                <div class="summary-value positive">฿${escapeHTML(student.totalPaid)}</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">คงค้าง</div>
-                <div class="summary-value ${totalOwed > 0 ? 'negative' : 'positive'}">฿${totalOwed}</div>
+                <div class="summary-value ${totalOwed > 0 ? 'negative' : 'positive'}">฿${escapeHTML(totalOwed)}</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">สัปดาห์ที่ยังไม่จ่าย</div>
-                <div class="summary-value ${unpaidCount > 0 ? 'negative' : 'positive'}">${unpaidCount} สัปดาห์</div>
+                <div class="summary-value ${unpaidCount > 0 ? 'negative' : 'positive'}">${escapeHTML(unpaidCount)} สัปดาห์</div>
             </div>
             <div class="summary-card">
                 <div class="summary-label">จำนวนที่ต้องจ่าย</div>
-                <div class="summary-value ${unpaidAmount > 0 ? 'negative' : 'positive'}">฿${unpaidAmount}</div>
+                <div class="summary-value ${unpaidAmount > 0 ? 'negative' : 'positive'}">฿${escapeHTML(unpaidAmount)}</div>
             </div>
         </div>
 
@@ -115,15 +138,15 @@ function renderSummaryTable(students) {
     const rows = students.map(s => {
         const totalOwed = maxAmount - s.totalPaid
         const unpaidWeeks = s.payments.filter(p => !p.paid && !p.used).length
-        const unpaidAmount = s.payments.filter(p => !p.paid && !p.used).reduce((sum, p) => sum + Number(p.amount || 0), 0)
+        const unpaidAmount = s.payments.filter(p => !p.paid && !p.used).reduce((sum, p) => sum + zeroBreak(p.amount || 0), 0)
         return `
         <tr>
-            <td>${s.id}</td>
-            <td>${s.prefix}${s.firstName} ${s.lastName}</td>
-            <td class="${s.totalPaid < 0 ? 'negative' : 'positive'}">฿${s.totalPaid}</td>
-            <td class="${totalOwed > 0 ? 'negative' : 'positive'}">฿${totalOwed}</td>
-            <td class="${unpaidWeeks > 0 ? 'negative' : 'positive'}">${unpaidWeeks} สัปดาห์</td>
-            <td class="${unpaidAmount > 0 ? 'negative' : 'positive'}">฿${unpaidAmount}</td>
+            <td>${escapeHTML(s.id)}</td>
+            <td>${escapeHTML("" + s.prefix + s.firstName + " " + s.lastName)}</td>
+            <td class="${s.totalPaid < 0 ? 'negative' : 'positive'}">฿${escapeHTML(s.totalPaid)}</td>
+            <td class="${totalOwed > 0 ? 'negative' : 'positive'}">฿${escapeHTML(totalOwed)}</td>
+            <td class="${unpaidWeeks > 0 ? 'negative' : 'positive'}">${escapeHTML(unpaidWeeks)} สัปดาห์</td>
+            <td class="${unpaidAmount > 0 ? 'negative' : 'positive'}">฿${escapeHTML(unpaidAmount)}</td>
         </tr>`
     }).join('')
 
