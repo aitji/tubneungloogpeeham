@@ -58,7 +58,7 @@ function renderStudent(student) {
     const totalOwed = maxAmount - student.totalPaid
     const unpaidWeeks = student.payments.filter(p => !p.paid && !p.used)
     const unpaidCount = unpaidWeeks.length
-    const unpaidAmount = unpaidWeeks.reduce((sum, p) => sum + zeroBreak(p.amountRaw || "0"), 0)
+    const unpaidAmount = unpaidWeeks.reduce((sum, p) => sum + p.status === "ใช้ไปแล้ว" ? 0 : zeroBreak(p.amountRaw || "0"), 0)
 
     let paymentsTable = ''
     if (student.payments.length > 0) {
@@ -138,7 +138,7 @@ function renderSummaryTable(students) {
     const rows = students.map(s => {
         const totalOwed = maxAmount - s.totalPaid
         const unpaidWeeks = s.payments.filter(p => !p.paid && !p.used).length
-        const unpaidAmount = s.payments.filter(p => !p.paid && !p.used).reduce((sum, p) => sum + zeroBreak(p.amountRaw || "0"), 0)
+        const unpaidAmount = s.payments.filter(p => !p.paid && !p.used).reduce((sum, p) => sum + p.status === "ใช้ไปแล้ว" ? 0 : zeroBreak(p.amountRaw || "0"), 0)
         return `
         <tr>
             <td>${escapeHTML(s.id)}</td>
