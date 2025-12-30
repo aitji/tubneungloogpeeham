@@ -116,7 +116,7 @@ function renderSummaryTable(students) {
         const totalOwed = maxAmount - s.totalPaid
         const unpaidWeeks = s.payments.filter(p => !p.paid && !p.used).length
         const unpaidAmount = s.payments.filter(p => !p.paid && !p.used)
-            .reduce((sum, p) => sum + p.amount, 0)
+            .reduce((sum, p) => parseInt(sum || 0) + parseInt(p?.amount || 0), 0)
         return `
         <tr>
             <td>${s.id}</td>
